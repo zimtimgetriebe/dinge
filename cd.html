@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+
+        <style>
+        *,*:before,*:after {
+            box-sizing: inherit;
+        }
+        html {
+            box-sizing: border-box;
+        }
+        body {
+            background: #f4f4f4;
+            color: #999;
+        }
+        div {
+            font: 400 14px/1.2 "Space Mono", Hack, Inconsolata, Monaco, monospace;
+        }
+        div span {
+            font-weight: 700;
+            color: #333;
+            opacity: .8;
+        }
+        </style>
+
+        <link href="https://fonts.googleapis.com/css?family=Space+Mono:400,400i,700&text=Noch1234567890TageStundenMinutenSekundenbiswirunswiedersehen." rel="stylesheet">
+
+    </head>
+    <body>
+
+        <div id="clock">
+            Noch <span class="days"></span><span class="hours"></span><span class="minutes"></span><span class="seconds"></span> bis <em>wir</em> uns wiedersehen.
+        </div>
+
+        <script>
+        'use strict';
+
+        let deadline = 'August 19 2016 17:30:00 GMT+0200';
+
+        function getTimeRemaining(endtime) {
+            let t       = Date.parse(endtime) - Date.parse(new Date()),
+                seconds = Math.floor( (t/1000) % 60 ),
+                minutes = Math.floor( (t/1000/60) % 60 ),
+                hours   = Math.floor( (t/(1000*60*60)) % 24 ),
+                days    = Math.floor( t/(1000*60*60*24) );
+
+            return {
+                'total'  : t, 
+                'days'   : days,
+                'hours'  : hours,
+                'minutes': minutes, 
+                'seconds': seconds
+            };
+        }
+
+        function initClock(id, endtime) {
+            let clock       = document.getElementById(id), 
+                daysElem    = clock.querySelector('.days'),
+                hoursElem   = clock.querySelector('.hours'),
+                minutesElem = clock.querySelector('.minutes'),
+                secondsElem = clock.querySelector('.seconds');
+
+            function updateClock() {
+                let t     = getTimeRemaining(endtime), 
+                    terms = {
+                        'd' : " Tag ",
+                        'h' : " Stunde ",
+                        'm' : " Minute und ",
+                        's' : " Sekunde "
+                    };
+
+                if (t.days    !== 1) { terms.d = " Tage, "; }
+                if (t.hours   !== 1) { terms.h = " Stunden, "; }
+                if (t.minutes !== 1) { terms.m = " Minuten und "; }
+                if (t.seconds !== 1) { terms.s = " Sekunden "; }
+
+                if (t.days == 0) { t.days = ""; terms.d = ""; }
+                if (t.hours == 0) { t.hours = ""; terms.h = ""; }
+
+                daysElem.innerHTML    = t.days    + terms.d;
+                hoursElem.innerHTML   = t.hours   + terms.h;
+                minutesElem.innerHTML = t.minutes + terms.m;
+                secondsElem.innerHTML = t.seconds + terms.s;
+
+                if(t.total<=0) {
+                    clearInterval(timeinterval);
+                    document.getElementById('clock').innerHTML = "Ich liebe dich.";
+                }
+
+                document.title = t.days + " " + terms.d + t.hours + " " + terms.h 
+                                 + t.minutes + " " + terms.m +  
+                                 + t.seconds + " " + terms.s;
+            }
+            updateClock();
+            let timeinterval = setInterval(updateClock, 1000);
+        }
+
+        initClock('clock', deadline);
+        </script>
+
+    </body>
+</html>
