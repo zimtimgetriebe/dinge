@@ -37,10 +37,10 @@
         <script>
         'use strict';
 
-        let deadline = 'August 19 2016 17:30:00 GMT+0200';
+        var deadline = 'August 19 2016 17:30:00 GMT+0200';
 
         function getTimeRemaining(endtime) {
-            let t       = Date.parse(endtime) - Date.parse(new Date()),
+            var t       = Date.parse(endtime) - Date.parse(new Date()),
                 seconds = Math.floor( (t/1000) % 60 ),
                 minutes = Math.floor( (t/1000/60) % 60 ),
                 hours   = Math.floor( (t/(1000*60*60)) % 24 ),
@@ -56,17 +56,18 @@
         }
 
         function initClock(id, endtime) {
-            let clock       = document.getElementById(id), 
+            var clock       = document.getElementById(id), 
                 daysElem    = clock.querySelector('.days'),
                 hoursElem   = clock.querySelector('.hours'),
                 minutesElem = clock.querySelector('.minutes'),
                 secondsElem = clock.querySelector('.seconds');
 
+
             function updateClock() {
-                let t     = getTimeRemaining(endtime), 
+                var t     = getTimeRemaining(endtime), 
                     terms = {
-                        'd' : " Tag ",
-                        'h' : " Stunde ",
+                        'd' : " Tag, ",
+                        'h' : " Stunde, ",
                         'm' : " Minute und ",
                         's' : " Sekunde "
                     };
@@ -78,23 +79,27 @@
 
                 if (t.days == 0) { t.days = ""; terms.d = ""; }
                 if (t.hours == 0) { t.hours = ""; terms.h = ""; }
+                if (t.minutes == 0) { t.minutes = ""; terms.m = ""; }
 
                 daysElem.innerHTML    = t.days    + terms.d;
                 hoursElem.innerHTML   = t.hours   + terms.h;
                 minutesElem.innerHTML = t.minutes + terms.m;
                 secondsElem.innerHTML = t.seconds + terms.s;
 
-                if(t.total<=0) {
-                    clearInterval(timeinterval);
-                    document.getElementById('clock').innerHTML = "Ich liebe dich.";
-                }
 
                 document.title = t.days + " " + terms.d + t.hours + " " + terms.h 
                                  + t.minutes + " " + terms.m +  
                                  + t.seconds + " " + terms.s;
+
+                if(t.total<=0) {
+                    clearInterval(timeinterval);
+                    document.getElementById('clock').innerHTML = "Ich liebe dich.";
+                    document.title = "Ich liebe dich.";
+                }
+
             }
             updateClock();
-            let timeinterval = setInterval(updateClock, 1000);
+            var timeinterval = setInterval(updateClock, 1000);
         }
 
         initClock('clock', deadline);
